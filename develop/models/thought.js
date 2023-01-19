@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const { Thought } = require('.');
 
 
 const userSchema = new Schema( 
@@ -9,9 +10,10 @@ const userSchema = new Schema(
             max_length: 280, 
         },
         createdAt: {
-            //date
+            type: date,
             //Set default value to the current timestamp
             //Use a getter method to format the timestamp on query
+            get: timeStamp => format(timeStamp, 'MM/dd/yyyy'),
         },
         //(The user that created this thought)
         username: {
@@ -24,3 +26,5 @@ const userSchema = new Schema(
         }
     }
 )
+
+module.exports = thoughtSchema;
