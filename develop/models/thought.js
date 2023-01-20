@@ -11,20 +11,27 @@ const userSchema = new Schema(
         },
         createdAt: {
             type: date,
-            //Set default value to the current timestamp
-            //Use a getter method to format the timestamp on query
+            default: Date.now,
             get: timeStamp => format(timeStamp, 'MM/dd/yyyy'),
         },
-        //(The user that created this thought)
         username: {
             type: string,
             required: true,
         },
-        //(These are like replies)
-        reactions: {
-            //Array of nested documents created with the reactionSchema
-        }
+        reactions: [reactionSchema]
+    },
+    {
+        toJson: {
+            getter: true
+        },
+        id: false
     }
-)
+);
 
-module.exports = thoughtSchema;
+thoughtSchema.virtual('reactionCount').get(function() {
+    return this.reactions.length;
+});
+
+const Thought = model('Thought', thoughtSchema);
+
+module.exports = Thought;

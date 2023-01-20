@@ -1,5 +1,4 @@
 const { Schema, model } = require('mongoose');
-//const userSchema = require('./')
 
 const userSchema = new Schema(
     {
@@ -13,14 +12,33 @@ const userSchema = new Schema(
             type: String,
             required: true,
             unique: true,
-            //  * Must match a valid email address (look into Mongoose's matching validation)
+            match: [/.+@.+\..+/],
         },
-        // thoughts: {
-            //Array of _id values referencing the Thought model
-        // }
-        // friends: {
-            //Array of _id values referencing the User model (self-reference)
-        // }
-})
+        thoughts: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Thought',
+        },
+        ],
+        friends: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'user',
+        },
+        ],
+},
+{
+    toJson: {
+        virtual: true,
+    },
+    id: false,
+}
+);
+
+userSchema.virtual('friendCount').get(function () {
+    return this.friends.length;
+});
+
+const User = model('User', userSchema);
 
 module.exports = userSchema;
