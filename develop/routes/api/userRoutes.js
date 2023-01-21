@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const { millisecondsInHour } = require('date-fns');
 const { User } = require('../../models/index');
 
 router
@@ -73,13 +74,45 @@ router
 
 router
     .route('/:userId/friends/:friendId')
-    .post 
+    .post((req, res) => {
+        User.findOneAndUpdate(
+            {_id: req.params.userId}, 
+            {$addToSet: {
+                friends: req.params.friendId
+            }},
+            {new: true}
+        )
+        .then(User => {
+            if(!User) {
+               return res.json({message: 'User does not exist'})
+            }
+            res.json(User)
+        })
+        .catch(err => {
+            res.json(err)
+        })
+    })
+
+    .delete((req, res) => {
+        User.findOneAndUpdate(
+            {_id: req.params.userId}, 
+            {$pull: {
+                friends: req.params.friendId
+            }},
+            {new: true}
+        )
+        .then(User => {
+            if(!User) {
+               return res.json({message: 'User does not exist'})
+            }
+            res.json(User)
+        })
+        .catch(err => {
+            res.json(err)
+        })
+    })
 
 
-    // findOneAndUpdate to add a friend to a user
-        // $addToSet
-        // new: true
-    // findOneAndUpdate to remove a friend from a user
-        // $pull
-        // new: true
+    module.exports = router
+
 
