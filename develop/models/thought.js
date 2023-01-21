@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose');
 const { Thought } = require('.');
 
 
-const userSchema = new Schema( 
+const thoughtSchema = new Schema( 
     {
         thoughtText: {
             type: String,
@@ -10,19 +10,19 @@ const userSchema = new Schema(
             max_length: 280, 
         },
         createdAt: {
-            type: date,
+            type: Date,
             default: Date.now,
             get: timeStamp => format(timeStamp, 'MM/dd/yyyy'),
         },
         username: {
-            type: string,
+            type: String,
             required: true,
         },
         reactions: [reactionSchema]
     },
     {
-        toJson: {
-            getter: true
+        toJSON: {
+            getters: true
         },
         id: false
     }

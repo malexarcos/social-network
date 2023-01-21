@@ -3,7 +3,7 @@ const format = require('date-fns/format');
 
 
 
-const userSchema = new Schema(
+const reactionSchema = new Schema(
      {
         reactionId: {
             type: Schema.Types.ObjectId,
@@ -23,6 +23,12 @@ const userSchema = new Schema(
             default: Date.now,
             get: timeStamp => format(timeStamp, 'MM/dd/yyyy'),
         },
+    },
+    {
+        toJSON: {
+            getters: true
+        },
+        id: false
     }
 )
 
